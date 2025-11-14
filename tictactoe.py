@@ -60,7 +60,10 @@ class TicTacToe:
         reset_btn = tk.Button(control_frame, text="New Game", command=self.reset_game, bg="lightgreen")
         reset_btn.pack(side=tk.LEFT, padx=10)
 
-        quit_btn = tk.Button(control_frame, text="Quit", command=self.root.quit, bg="lightcoral")
+        # 🔥 Modified Quit button to use confirm_quit()
+        quit_btn = tk.Button(control_frame, text="Quit",
+                             command=self.confirm_quit,
+                             bg="lightcoral")
         quit_btn.pack(side=tk.LEFT, padx=10)
 
     def make_move(self, index):
@@ -84,10 +87,7 @@ class TicTacToe:
             messagebox.showinfo("Game Over", "It's a tie!")
             self.disable_all_buttons()
         else:
-            # Switch player
             self.current_player = "O" if self.current_player == "X" else "X"
-
-            # 🔥 Updated label with color change
             self.player_label.config(
                 text=f"Current Player: {self.current_player}",
                 fg="blue" if self.current_player == "X" else "red"
@@ -120,7 +120,6 @@ class TicTacToe:
         self.board = [""] * 9
         self.game_active = True
 
-        # 🔥 Reset label color and text
         self.player_label.config(
             text=f"Current Player: {self.current_player}",
             fg="blue"
@@ -129,6 +128,11 @@ class TicTacToe:
         for i in range(3):
             for j in range(3):
                 self.buttons[i][j].config(text="", state=tk.NORMAL, bg="SystemButtonFace")
+
+    # ✅ Commit: Added confirm_quit with Yes/No dialog
+    def confirm_quit(self):
+        if messagebox.askyesno("Exit Game", "Are you sure you want to quit?"):
+            self.root.quit()
 
 def main():
     root = tk.Tk()
