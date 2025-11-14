@@ -35,7 +35,7 @@ class TicTacToe:
                                    command=lambda idx=i*3+j: self.make_move(idx))
                 button.grid(row=i, column=j, padx=2, pady=2)
 
-                # 🔥 Add Hover Effect
+                # Hover effect
                 button.bind("<Enter>", lambda e, b=button: b.config(bg="lightgray"))
                 button.bind("<Leave>", lambda e, b=button: b.config(bg="SystemButtonFace"))
 
@@ -56,7 +56,6 @@ class TicTacToe:
         if not self.game_active or self.board[index] != "":
             return
 
-        # Update board and button
         self.board[index] = self.current_player
         row, col = index // 3, index % 3
         self.buttons[row][col].config(
@@ -65,15 +64,15 @@ class TicTacToe:
             bg="lightyellow" if self.current_player == "X" else "lightblue"
         )
 
-        # Check win or tie
         if self.check_winner():
             self.game_active = False
             messagebox.showinfo("Game Over", f"Player {self.current_player} wins!")
+            self.disable_all_buttons()   # 🔥 Disable buttons when game ends
         elif self.check_tie():
             self.game_active = False
             messagebox.showinfo("Game Over", "It's a tie!")
+            self.disable_all_buttons()   # 🔥 Disable buttons when game ends
         else:
-            # Switch player
             self.current_player = "O" if self.current_player == "X" else "X"
             self.player_label.config(text=f"Current Player: {self.current_player}")
 
@@ -84,8 +83,7 @@ class TicTacToe:
             [0, 4, 8], [2, 4, 6]               # Diagonals
         ]
         for combo in wins:
-            if (self.board[combo[0]] == self.board[combo[1]] == self.board[combo[2]] == self.current_player):
-                # Highlight winning combo
+            if self.board[combo[0]] == self.board[combo[1]] == self.board[combo[2]] == self.current_player:
                 for idx in combo:
                     row, col = idx // 3, idx % 3
                     self.buttons[row][col].config(bg="lightgreen")
@@ -95,13 +93,18 @@ class TicTacToe:
     def check_tie(self):
         return "" not in self.board
 
+    # ✅ Commit: Disable all buttons after win/tie
+    def disable_all_buttons(self):
+        for row in self.buttons:
+            for btn in row:
+                btn.config(state=tk.DISABLED)
+
     def reset_game(self):
         self.current_player = "X"
         self.board = [""] * 9
         self.game_active = True
         self.player_label.config(text=f"Current Player: {self.current_player}")
 
-        # Reset all buttons
         for i in range(3):
             for j in range(3):
                 self.buttons[i][j].config(text="", state=tk.NORMAL, bg="SystemButtonFace")
