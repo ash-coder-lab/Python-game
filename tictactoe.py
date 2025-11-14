@@ -19,7 +19,12 @@ class TicTacToe:
         title_label.pack(pady=10)
 
         # Current player display
-        self.player_label = tk.Label(self.root, text=f"Current Player: {self.current_player}", font=("Arial", 12), fg="blue")
+        self.player_label = tk.Label(
+            self.root,
+            text=f"Current Player: {self.current_player}",
+            font=("Arial", 12),
+            fg="blue"
+        )
         self.player_label.pack(pady=5)
 
         # Game board frame
@@ -31,8 +36,14 @@ class TicTacToe:
         for i in range(3):
             row = []
             for j in range(3):
-                button = tk.Button(board_frame, text="", font=("Arial", 20), width=4, height=2,
-                                   command=lambda idx=i*3+j: self.make_move(idx))
+                button = tk.Button(
+                    board_frame,
+                    text="",
+                    font=("Arial", 20),
+                    width=4,
+                    height=2,
+                    command=lambda idx=i*3+j: self.make_move(idx)
+                )
                 button.grid(row=i, column=j, padx=2, pady=2)
 
                 # Hover effect
@@ -67,20 +78,26 @@ class TicTacToe:
         if self.check_winner():
             self.game_active = False
             messagebox.showinfo("Game Over", f"Player {self.current_player} wins!")
-            self.disable_all_buttons()   # 🔥 Disable buttons when game ends
+            self.disable_all_buttons()
         elif self.check_tie():
             self.game_active = False
             messagebox.showinfo("Game Over", "It's a tie!")
-            self.disable_all_buttons()   # 🔥 Disable buttons when game ends
+            self.disable_all_buttons()
         else:
+            # Switch player
             self.current_player = "O" if self.current_player == "X" else "X"
-            self.player_label.config(text=f"Current Player: {self.current_player}")
+
+            # 🔥 Updated label with color change
+            self.player_label.config(
+                text=f"Current Player: {self.current_player}",
+                fg="blue" if self.current_player == "X" else "red"
+            )
 
     def check_winner(self):
         wins = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8],   # Rows
-            [0, 3, 6], [1, 4, 7], [2, 5, 8],   # Columns
-            [0, 4, 8], [2, 4, 6]               # Diagonals
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
         ]
         for combo in wins:
             if self.board[combo[0]] == self.board[combo[1]] == self.board[combo[2]] == self.current_player:
@@ -93,7 +110,6 @@ class TicTacToe:
     def check_tie(self):
         return "" not in self.board
 
-    # ✅ Commit: Disable all buttons after win/tie
     def disable_all_buttons(self):
         for row in self.buttons:
             for btn in row:
@@ -103,7 +119,12 @@ class TicTacToe:
         self.current_player = "X"
         self.board = [""] * 9
         self.game_active = True
-        self.player_label.config(text=f"Current Player: {self.current_player}")
+
+        # 🔥 Reset label color and text
+        self.player_label.config(
+            text=f"Current Player: {self.current_player}",
+            fg="blue"
+        )
 
         for i in range(3):
             for j in range(3):
